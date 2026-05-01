@@ -24,13 +24,6 @@ jobs:
     - name: Build and Run Tests
       run: mvn clean verify
 
-    - name: Upload Test Results
-      if: failure()
-      uses: actions/upload-artifact@v4
-      with:
-        name: test-reports
-        path: target/surefire-reports/
-
   docker-package:
     needs: build-and-test
     runs-on: ubuntu-latest
@@ -40,16 +33,12 @@ jobs:
     - name: Checkout Code
       uses: actions/checkout@v4
 
+    # Setup Buildx is the standard for modern Docker builds
     - name: Set up Docker Buildx
-      uses: actions/setup-docker-action@v4
+      uses: docker/setup-buildx-action@v3
 
+    # This replaces the failed 'setup-docker-action'
     - name: Build Docker Image
       run: |
-        docker build -t byteentropy/fx-core:${{ github.sha }} .
-        docker tag byteentropy/fx-core:${{ github.sha }} byteentropy/fx-core:latest
-
-    # Optional: Add login and push steps here if you have a DockerHub account
-    # - name: Login to DockerHub
-    #   run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-    # - name: Push to DockerHub
-    #   run: docker push byteentropy/fx-core:latest
+        docker build -t fx-core:${{ github.sha }} .
+        docker tag fx-core:${{ github.sha }} fx-core:latest

@@ -37,3 +37,15 @@
 *   **Containerization:** Docker (Multi-stage builds)
 *   **CI/CD:** GitHub Actions
 *   **Testing:** JUnit 5 & AssertJ
+
+## Docker 
+```
+# Build the image
+docker build -t fx-core .
+
+# Run the container
+docker run -p 8085:8085 fx-core
+```
+
+## License 
+MIT License

@@ -1,0 +1,55 @@
+name: FX-Core CI/CD
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Set up JDK 21
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+        cache: 'maven'
+
+    - name: Build and Run Tests
+      run: mvn clean verify
+
+    - name: Upload Test Results
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-reports
+        path: target/surefire-reports/
+
+  docker-package:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Set up Docker Buildx
+      uses: actions/setup-docker-action@v4
+
+    - name: Build Docker Image
+      run: |
+        docker build -t byteentropy/fx-core:${{ github.sha }} .
+        docker tag byteentropy/fx-core:${{ github.sha }} byteentropy/fx-core:latest
+
+    # Optional: Add login and push steps here if you have a DockerHub account
+    # - name: Login to DockerHub
+    #   run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+    # - name: Push to DockerHub
+    #   run: docker push byteentropy/fx-core:latest

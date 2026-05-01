@@ -1,7 +1,7 @@
 
 # 💹 FX-Core | High-Precision Pricing Engine
 
-[![FX-Core CI/CD](https://github.com/your-username/fx-core/actions/workflows/pipeline.yml/badge.svg)](https://github.com/your-username/fx-core/actions)
+[![FX-Core CI/CD](https://github.com/ByteEntropyDotCom/fx-core/actions/workflows/pipeline.yml/badge.svg)](https://github.com/your-username/fx-core/actions)
 ![Java Version](https://img.shields.io/badge/Java-21-orange)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2-green)
 ![Docker](https://img.shields.io/badge/Docker-Enabled-blue)
